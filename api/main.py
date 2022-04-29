@@ -12,7 +12,7 @@ app = FastAPI(
 async def get_prediction(file: UploadFile = File(...)):
     image_file = await file.read()
     prediction = predict_land_cover(image_file)
-    return prediction.tolist()
+    return prediction
 
 
 

@@ -4,7 +4,6 @@
     <img src="./assets/Atforestry_logo.JPG" alt="isolated" width="600"/>
 </p>
 
-<br/>
 > ### Monitoring deforestation using satellite images and computer vision models. 
 
 Tracking deforestation is an essential problem to resolve in order to fight global warming. We have taken 

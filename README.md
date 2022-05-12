@@ -1,4 +1,4 @@
-# Atforestry
+<h1 align="center">Atforestry</h1>
 
 <p align="center">
     <img src="./assets/Atforestry_logo.JPG" alt="isolated" width="600"/>

@@ -1,8 +1,17 @@
-# Atforestry
-AI for deforestation monitoring
+<h1 align="center">Atforestry</h1>
+
+<p align="center">
+    <img src="./assets/Atforestry_logo.JPG" alt="isolated" width="600"/>
+</p>
+
+> ## Monitoring deforestation using satellite images and computer vision models. 
+
+Tracking deforestation is an essential problem to resolve to fight global warming. This web application monitors satellite images through computer vision models trained to detect critical changes on the earth's surface.
+
+
 
 ## Training Environment
-Run the below on your bash terminal
+Run the below on your bash terminaweb l
 
 `conda env create -f environment.yml`
 

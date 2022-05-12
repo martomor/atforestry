@@ -35,6 +35,8 @@ With the trained model and fetching satellite images from the [Planet API](https
 
 Exploiting FastAPI capabilities, we have set an initial [API](./api/) which runs an inference service to predict cover land types, using a preliminary model trained with just one epoch run:
 
+![](./assets/cover_api_demo.gif)
+
 ## To Be Done
 
 During the next 5 weeks, atforestry team will be focused on the below tasks:

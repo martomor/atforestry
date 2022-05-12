@@ -1,4 +1,9 @@
 # Atforestry
+
+<p align="center">
+    <img src="./assets/Atforestry_logo.JPG" alt="isolated" width="600"/>
+</p>
+
 AI for deforestation monitoring
 
 ## Training Environment

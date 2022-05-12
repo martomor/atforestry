@@ -31,27 +31,21 @@ With the trained model and fetching satellite images from the [Planet API](https
 
 <h6 align="center">Luis Di Martino - Monitoring deforestation with open data and Machine Learning</h6>
 
-## Training Environment
-Run the below on your bash terminaweb l
+## Preliminary Results
 
-`conda env create -f environment.yml`
+Exploiting FastAPI capabilities, we have set an initial [API](./api/) which runs an inference service to predict cover land types, using a preliminary model trained with just one epoch run:
 
-`conda activate python35`
+## To Be Done
 
-`pip install -r requirements.txt`
+During the next 5 weeks, atforestry team will be focused on the below tasks:
 
-## Inference Environment
-For serving the APIs you will need to use another environment as python 3.5 doesn't work on FastAPI. You can use virtualenv for that:
-
-`virtualenv venv`
-
-`source venv/bin/activate`
-
-`pip install -r app/requirements.txt`
-
-After installing all dependencies in virtualenv you can run uvicorn:
-
-`uvicorn api.main:app`
+- **Training**: Improve the VGG16 model increasing the epochs runs
+- **Inference Services**: API to compare the cover land at different points in time
+- **Feature Store**: Set up a database to store the data
+- **Data Pipelines**: Create pipelines to continuously fetch Planet API data
+- **Training Pipelines**: Develop Training Pipelines to retrain model if inferenced tags are not accurate
+- **Web Application**: Create a web interface to interact with the APIs
+- **Other MLOps Tasks**: Set up Model Registry and Monitoring tools
 
 
 

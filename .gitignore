@@ -1,5 +1,6 @@
 #Project Related
 *.h5
+data/*.jpg
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

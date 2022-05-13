@@ -20,7 +20,6 @@ For this task, we are using the [Planet: Understanding the Amazon from Space](ht
 
 <h6 align="center">Planet: Understanding the Amazon from Space</h6>
 
-
 ## Comparing Cover Land
 
 With the trained model and fetching satellite images from the [Planet API](https://developers.planet.com/docs/apis/), Atforestry API compares the type of cover land in 2 different periods. If the initial image had a rainforest type of cover land, such as `primary`,  and the second one has a deforestation tag,  such as `agriculture`, `habitation` or `road`, we can signal  a deforestation case. We are leveraging the work done by [Luis Di Martino](https://github.com/lddm/forests-monitoring) in his article [Monitoring deforestation with open data and Machine Learning](https://medium.com/digital-sense-ai/monitoring-deforestation-with-open-data-and-machine-learning-part-2-c1be298c574b).
@@ -30,6 +29,27 @@ With the trained model and fetching satellite images from the [Planet API](https
 </p>
 
 <h6 align="center">Luis Di Martino - Monitoring deforestation with open data and Machine Learning</h6>
+
+## Data
+
+The Planet dataset consists of images collected from 4-band satellites in sun-synchronous orbit (SSO) and International Space Station (ISS) orbit and was stored using the GeoTiff format. The data was collected between January 1, 2016 and February 1, 2017. All the scenes are from the Amazon basin, which includes Brazil, Peru, Uruguay, Colombia, Venezuela, Guyana, Bolivia, and Ecuador. The type of cover land has already been labeled for us using a mapping csv table. 
+
+To dive into the type of data that we are using, you can check out the [exploration notebook](/notebooks/1_exploration_initial.ipynb). 
+
+## Model
+
+As explained earlier, we are leveraging a pre-trained VGG16 model which consists of 16 convolutional layers with 3x3 convolutions, padding and max-pooling layers of 2x2 filters of stride 2, ending with 2 fully connected layers and a softmax output. The network has almost 138 Million parameters. 
+
+The implementation of the model can be find in the [notebooks](/notebooks/) folder. Please note that this is still a work in progress!
+
+<p align="center">
+    <img src="./assets/VGG16_architecture.JPG" alt="isolated" width="500"/>
+</p>
+
+<h6 align="center">Architecture of VGG16</h6>
+
+
+
 
 ## Preliminary Results
 

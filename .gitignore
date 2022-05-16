@@ -1,6 +1,10 @@
 #Project Related
 *.h5
-data/*.jpg
+data/test-jpg/*.jpg
+data/test-jpg-additional/*.jpg
+data/train-jpg/*.jpg
+data/train-tif-v2/*.tif
+data/train_v2.csv
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

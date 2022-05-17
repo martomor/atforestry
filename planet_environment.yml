@@ -1,0 +1,8 @@
+name: atforestry-planet
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - ipykernel
+prefix: /root/anaconda3/envs/atforestry-planet

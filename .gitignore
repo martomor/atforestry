@@ -1,10 +1,16 @@
 #Project Related
 *.h5
-data/test-jpg/*.jpg
-data/test-jpg-additional/*.jpg
-data/train-jpg/*.jpg
-data/train-tif-v2/*.tif
-data/train_v2.csv
+data/training_data/test-jpg/*.jpg
+data/training_data/test-jpg-additional/*.jpg
+data/training_data/train-jpg/*.jpg
+data/training_data/train-tif-v2/*.tif
+data/training_data/train_v2.csv
+data/planet_data/quads/*.tiff
+data/planet_data/quads2/*.tiff
+notebooks/temp/
+notebooks/notebook_utils.py
+*env
+*.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

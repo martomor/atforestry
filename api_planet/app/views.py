@@ -3,6 +3,11 @@ import os
 import requests
 import json
 import urllib.request
+from app.utils import preprocess_raster_image
+import numpy as np
+from telluric.georaster import GeoRaster2
+from PIL import Image
+import tensorflow as tf
 
 
 
@@ -119,4 +124,32 @@ def download_quads_tiff(mosaic_id:str, quads:dict, path:str=os.path.join('..','d
             urllib.request.urlretrieve(link, filename)
     
     return True
+
+
+def generate_raster_png_files(tiff_file:str, mosaic_code:str, path:str):
+    tiff_path = os.path.join(path, mosaic_code,tiff_file)
+    raster = GeoRaster2.open(tiff_path)
+    
+    ## See raster chunks
+    i=1
+    for chunk in raster.chunks(224):
+        raster = chunk.raster
+        converted_raster = preprocess_raster_image(raster)
+        img = tf.image.resize(converted_raster, [256,256])
+        img = tf.image.central_crop(img, central_fraction=224/256)
+        img = tf.cast(img, np.uint8).numpy()
+        img = Image.fromarray(img, 'RGB')
+        i=i+1
+        #img.show()
+        #check if directory exists, if not create it
+        file_path = os.path.join(path, mosaic_code)
+        tiff_folder = os.path.join(file_path, tiff_file[:-5])
+        #Create directory
+        if not os.path.exists(tiff_folder):
+            os.mkdir(tiff_folder)
+        #Save file
+        tiff_file_path = os.path.join(tiff_folder,f'{i}.png')
+        img.save(tiff_file_path)
+
+
         

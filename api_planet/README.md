@@ -1,0 +1,5 @@
+#Instructions
+
+## Mosaics being used:
+planet_medres_normalized_analytic_2022-04_mosaic
+planet_medres_normalized_analytic_2020-06_2020-08_mosaic

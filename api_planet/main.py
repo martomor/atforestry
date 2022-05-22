@@ -1,69 +1,73 @@
-from planet import api
-import os
+from fastapi import FastAPI
+from app.views import download_quads_tiff, get_mosaic_id, get_quads_from_mosaic, store_quads_metadata
+#from app.models import MosaicName
+from app.utils import PlanetAPI
+import logging
+from logging.config import dictConfig
+from app.log_config import log_config
+
+dictConfig(log_config)
+
+logger = logging.getLogger("planet_api_logger")
+
 import requests
-import json
-import urllib.request
+
+app = FastAPI(
+    title='Atforesty Planet Web API pull',
+    description='This API allows to fetch data from the Planet interface',
+    version="1.0.0"
+)
 
 
-PLANET_API_KEY = os.getenv("PLANET_API_KEY")
+@app.on_event("startup")
+async def startup_event():
+    """Authenticates to Planet API
 
-API_URL = "https://api.planet.com/basemaps/v1/mosaics"
+    Raises:
+        SystemError: If no PLANET_API_KEY is provided
+    """    
+    global planet_api
+    planet_api = PlanetAPI()
+    #setup session
+    global session
+    session = requests.Session()
+    #authenticate
+    if planet_api.api_key == None:
+        raise SystemError('environment PLANET_API_KEY variable is empty!!')
 
-#setup session
-session = requests.Session()
+    session.auth = (planet_api.api_key, "") 
 
-#authenticate
-session.auth = (PLANET_API_KEY, "") 
 
-#set params for search using name of mosaic
-parameters = {
-    "name__is" :"planet_medres_normalized_analytic_2020-06_2020-08_mosaic" # <= customize to your use case
-}
-#make get request to access mosaic from basemaps API
-res = session.get(API_URL, params = parameters)
-#response status code
-print(res.status_code)
+@app.get("/v1/check_planet_connection")
+async def check_connection():
+    """Checks connection status tu planet API
 
-#print metadata for mosaic
-mosaic = res.json()
-print(json.dumps(mosaic, indent=2))
+    Returns:
+        res.status_code: Response should be 200
+    """    
+    parameters = {
+    "name__is" :'planet_medres_normalized_analytic_2022-04_mosaic'
+    }
+    res = session.get(planet_api.api_url, params = parameters)
+    logger.info("Health connection to Planet")
+    return {'response':res.status_code,
+            'description':'acces confirmed'
+    }
 
-#get id
-mosaic_id = mosaic['mosaics'][0]['id']
-#get bbox for entire mosaic
-mosaic_bbox = mosaic['mosaics'][0]['bbox']
-#converting bbox to string for search params
-string_bbox = ','.join(map(str, mosaic_bbox))
 
-print('Mosaic id: '+ mosaic_id)
-print('Mosaic bbox: '+ string_bbox)
+@app.get("/v1/fetch_mosaics")
+async def fetch_mosacis_by_name_bbox(mosaic_name:str, bbox:str):
+    """Downloads planet quads tiffs based on mosaic names and bounding box
 
-#search for mosaic quad using AOI
-search_parameters = {
-    'bbox': string_bbox,
-    'minimal': True
-}
-#accessing quads using metadata from mosaic
-quads_url = "{}/{}/quads".format(API_URL, mosaic_id)
-res = session.get(quads_url, params=search_parameters, stream=True)
-print(res.status_code)
+    Args:
+        mosaic_name (str): Name of the mosaic to fetch
+        bbox (str): Bounding box of the mosic to fetch
 
-quads = res.json()
-items = quads['items']
-#printing an example of quad metadata
-print(json.dumps(items[0], indent=2))
-
-breakpoint()
-
-#iterate over quad download links and saving to folder by id
-for i in items:
-    link = i['_links']['download']
-    name = i['id']
-    name = name + '.tiff'
-    DIR = 'quads/' # <= a directory i created, feel free to customize
-    filename = os.path.join(DIR, name)
-
-    #checks if file already exists before s
-    if not os.path.isfile(filename):
-        urllib.request.urlretrieve(link, filename)
-
+    """    
+    mosaic_id = get_mosaic_id(mosaic_name, session=session, url= planet_api.api_url)
+    quads = get_quads_from_mosaic(mosaic_id=mosaic_id, bbox=bbox, session=session, url=planet_api.api_url)
+    logger.info("Requesting quads tiffs")
+    download_quads_tiff(mosaic_id=mosaic_id, quads=quads)
+    logger.info("Pushing metadata")
+    store_quads_metadata(quads=quads)
+    return {'images downloaded!'}

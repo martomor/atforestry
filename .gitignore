@@ -9,8 +9,9 @@ data/planet_data/quads/*.tiff
 data/planet_data/quads2/*.tiff
 notebooks/temp/
 notebooks/notebook_utils.py
+data/planet_data/mosaics/
 *env
-*.json
+train_data.tar.gz
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

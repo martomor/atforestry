@@ -12,6 +12,7 @@ notebooks/notebook_utils.py
 data/planet_data/mosaics/
 *env
 train_data.tar.gz
+notebooks/weights/*best.hdf5
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from app.views import download_quads_tiff, get_mosaic_id, get_quads_from_mosaic, store_quads_metadata, generate_raster_png_files
+#from app.utils import download_quads_tiff, get_mosaic_id, get_quads_from_mosaic, store_quads_metadata, generate_raster_png_files
 #from app.models import MosaicName
-from app.utils import PlanetAPI, list_files_in_directory
+from app.views import PlanetAPI, Mosaic
 import logging
 from logging.config import dictConfig
 from app.log_config import log_config
@@ -55,36 +55,40 @@ async def check_connection():
             'description':'acces confirmed'
     }
 
-
 @app.get("/v1/fetch_mosaics")
-async def fetch_mosacis_by_name_bbox(mosaic_name:str, bbox:str):
-    """Downloads planet quads tiffs based on mosaic names and bounding box
-
-    Args:
-        mosaic_name (str): Name of the mosaic to fetch
-        bbox (str): Bounding box of the mosic to fetch
-
-    """    
-    mosaic_id = get_mosaic_id(mosaic_name, session=session, url= planet_api.api_url)
-    quads = get_quads_from_mosaic(mosaic_id=mosaic_id, bbox=bbox, session=session, url=planet_api.api_url)
+async def fetch_mosaics(mosaic_name:str, date:str, bbox:str):
+    mosaic = Mosaic(name = mosaic_name, date=date, session=session, url=planet_api.api_url)
+    #Set the mosaic id
+    mosaic.set_mosaic_id()
+    #Get the quads
+    mosaic.get_quads_from_mosaic(bbox=bbox)
     logger.info("Requesting quads tiffs")
-    download_quads_tiff(mosaic_id=mosaic_id, quads=quads)
+    #Download quads
+    mosaic.download_quads_tiff()
     logger.info("Pushing metadata")
-    store_quads_metadata(quads=quads)
-    return {'images downloaded!'}
+    #Store metadata
+    mosaic.store_quads_metadata()   
+    logger.info("Converting tiff to rgb files")    
+    #Store rgb rasters
+    mosaic.generate_raster_files()
+    logger.info("Files Generated")    
+    return {'status': 'success'}
 
-@app.get("/v1/generate_raster_files")
-async def generate_raster_files_by_mosaic_code(mosaic_name:str):
-    """Creates rasters from tif files and stores them as png images
 
-    Args:
-        mosaic_name (str): mosaic name (has to be stored in system)
 
-    """    
-    logger.info("Requesting mosaic id")
-    mosaic_id = get_mosaic_id(mosaic_name, session=session, url= planet_api.api_url)
-    logger.info("Converting tiff to rgb files")
-    tiff_files = list_files_in_directory(os.path.join('..','data','planet_data','mosaics',mosaic_id))
-    for tiff_file in tiff_files:
-        generate_raster_png_files(tiff_file=tiff_file,mosaic_code=mosaic_id, path='../data/planet_data/mosaics/')
-    return {'files generated'}
+#@app.get("/v1/generate_raster_files")
+#async def generate_raster_files_by_mosaic_code(mosaic_name:str):
+#    """Creates rasters from tif files and stores them as png images
+
+#    Args:
+#        mosaic_name (str): mosaic name (has to be stored in system)#
+
+#    """    
+#    logger.info("Requesting mosaic id")
+#    mosaic_id = get_mosaic_id(mosaic_name, session=session, url= planet_api.api_url)
+#    logger.info("Converting tiff to rgb files")
+#    tiff_files = list_files_in_directory(os.path.join('..','data','planet_data','mosaics',mosaic_id))
+#    for tiff_file in tiff_files:
+#       generate_raster_png_files(tiff_file=tiff_file,mosaic_code=mosaic_id, path='../data/planet_data/mosaics/')
+#    return {'files generated'}
+

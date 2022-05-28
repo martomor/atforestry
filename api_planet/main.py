@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
+from app.utils import get_raster_image_path
 #from app.utils import download_quads_tiff, get_mosaic_id, get_quads_from_mosaic, store_quads_metadata, generate_raster_png_files
 #from app.models import MosaicName
 from app.views import PlanetAPI, Mosaic
@@ -74,21 +76,12 @@ async def fetch_mosaics(mosaic_name:str, date:str, bbox:str):
     logger.info("Files Generated")    
     return {'status': 'success'}
 
+@app.get("/v1/get_raster_image")
+async def gest_raster_image(bbox:str, date:str, raster_location:int):
+    bbox=bbox.split(',')
+    bbox = [float(i) for i in bbox]
+    print(bbox)
+    file_path = get_raster_image_path(bbox=bbox, mosaic_date=date, raster_location=raster_location)   
+    return FileResponse(file_path)
 
-
-#@app.get("/v1/generate_raster_files")
-#async def generate_raster_files_by_mosaic_code(mosaic_name:str):
-#    """Creates rasters from tif files and stores them as png images
-
-#    Args:
-#        mosaic_name (str): mosaic name (has to be stored in system)#
-
-#    """    
-#    logger.info("Requesting mosaic id")
-#    mosaic_id = get_mosaic_id(mosaic_name, session=session, url= planet_api.api_url)
-#    logger.info("Converting tiff to rgb files")
-#    tiff_files = list_files_in_directory(os.path.join('..','data','planet_data','mosaics',mosaic_id))
-#    for tiff_file in tiff_files:
-#       generate_raster_png_files(tiff_file=tiff_file,mosaic_code=mosaic_id, path='../data/planet_data/mosaics/')
-#    return {'files generated'}
 

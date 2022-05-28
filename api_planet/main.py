@@ -76,19 +76,4 @@ async def fetch_mosaics(mosaic_name:str, date:str, bbox:str):
 
 
 
-#@app.get("/v1/generate_raster_files")
-#async def generate_raster_files_by_mosaic_code(mosaic_name:str):
-#    """Creates rasters from tif files and stores them as png images
-
-#    Args:
-#        mosaic_name (str): mosaic name (has to be stored in system)#
-
-#    """    
-#    logger.info("Requesting mosaic id")
-#    mosaic_id = get_mosaic_id(mosaic_name, session=session, url= planet_api.api_url)
-#    logger.info("Converting tiff to rgb files")
-#    tiff_files = list_files_in_directory(os.path.join('..','data','planet_data','mosaics',mosaic_id))
-#    for tiff_file in tiff_files:
-#       generate_raster_png_files(tiff_file=tiff_file,mosaic_code=mosaic_id, path='../data/planet_data/mosaics/')
-#    return {'files generated'}
 

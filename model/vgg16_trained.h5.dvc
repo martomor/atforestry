@@ -1,0 +1,4 @@
+outs:
+- md5: 691d3ffcb7912c63838f3fd18d9214c3
+  size: 178340488
+  path: vgg16_trained.h5

@@ -1,0 +1,4 @@
+[core]
+    remote = model-tracker
+['remote "model-tracker"']
+    url = gdrive://1KxwM_eb6sldbo7ZyHgeDXhCGP3k64wjv
